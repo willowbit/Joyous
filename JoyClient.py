@@ -1,4 +1,3 @@
-import schedule
 import time
 import discord
 import random as rnd
