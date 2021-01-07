@@ -5,6 +5,7 @@ from discord import client
 from data import add_joy
 from data import fetch_joys
 from data import questions
+from data import remove_joy
 import json
 
 author_blacklist = []
@@ -41,6 +42,14 @@ async def add(words, trigger, message):
     x = ' '.join(words)
     add_joy(x)
     await message.channel.send(f'{message.author.mention} "{x}" has been added to my library!')
+
+async def remove(words, trigger, message):
+    words.remove(trigger)
+    x = ' '.join(words)
+    print('---------------------')
+    print(x)
+    remove_joy(x)
+    await message.channel.send(f'{message.author.mention} "{x}" has been removed from my library.')
 
 async def random(words, trigger, message):
     joys = fetch_joys()
@@ -100,6 +109,7 @@ command_list = [
     botcommand('panic', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA!!!!!!'),
     botcommand('say', say),
     botcommand('commands', commands),
+    botcommand('remove', remove)
 ]
 
 class reaction:
