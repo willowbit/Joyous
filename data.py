@@ -1,3 +1,5 @@
+import discord
+import random as rnd
 import json
 
 def add_joy(joy):
@@ -12,6 +14,17 @@ def fetch_joys():
         joys = json.load(f)
         return joys
 
+class question:
+    def __init__(self, question, example):
+        self.question = question
+        self.example = example
+
 questions = [
-    'What is something not many people know about you?'
+    question("Something most people don't know about me is.....", "Something most people don't know about me is that I love being a bot!! :D."),
+    question("Something I accomplished today was......", "Something I accomplished today was finishing all my homework!")
 ]
+def roll():
+    qst = rnd.choice(questions)
+    qstq = qst.question
+    qstex = qst.example
+
