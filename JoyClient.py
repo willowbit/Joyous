@@ -16,26 +16,25 @@ qstex = qst.example
 
 command_embed = discord.Embed(title='Commands', description="""
 **>commands** - shows this screen
-**>hello** - hello!!
-**>add [x]** - allows you to add [x] to the gratitude wall
 **>help** - displays the help screen
+
+**>add [x]** - allows you to add [x] to the gratitude wall
+**>remove [x]** - allows you to remove [x] to the gratitude wall
+
 **>amigay [x]** - discerns if you, or x if provided, are gay
 **>say [x]** - makes joyous say [x], your message will be deleted
-
+**>kill** - kills Joyous. Use only in case of emergency.
 """)
 
 help_embed = discord.Embed(title='Joyous Help', description="Hi! I'm Joyous, your discord positivity bot!", color=0xff6bc9)
 help_embed.add_field(name='What do I do?', value="I keep your server positive with a daily reflection. I also have a wall where people can save their responses.")
 help_embed.add_field(name="How do I use Joyous?", value="You can talk to me by using '>' and whatever you want me to do. You can find a list of commands with >commands.")
-help_embed.set_footer(text='under progress by willy! you can find the project here https://github.com/CuteBlueRadio/Joyous')
+help_embed.set_footer(text='under progress by willy! (WaffleBread#5131) you can find the project here: https://github.com/CuteBlueRadio/Joyous')
 
 wall_embed = discord.Embed(title='The Wall', description="Here's where all of your opted daily reflection responses are stored! Everyone can see this.", color=0xff6bc9)
 
 comand_prefix = '>'
 
-
-async def hello(words, trigger, message):
-    await message.channel.send('Hello!!')
 
 async def add(words, trigger, message):
     words.remove(trigger)
@@ -85,6 +84,9 @@ async def say(words, trigger, message):
 async def commands(words, trigger, message):
     await message.channel.send(embed = command_embed)
 
+async def kill(words, trigger, message):
+    exit()
+
 class botcommand:
     def __init__(self, trigger, response):
         self.trigger = trigger
@@ -100,7 +102,6 @@ class botcommand:
             return False
 
 command_list = [
-    botcommand('hello', hello),
     botcommand('add', add),
     botcommand('random', random),
     botcommand('all', all),
@@ -109,7 +110,8 @@ command_list = [
     botcommand('panic', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA!!!!!!'),
     botcommand('say', say),
     botcommand('commands', commands),
-    botcommand('remove', remove)
+    botcommand('remove', remove),
+    botcommand('kill', kill),
 ]
 
 class reaction:
@@ -124,6 +126,7 @@ reaction_list = [
     reaction('hello', 'Nice to see you!'),
     reaction('bleh', 'yeah same bro'),
     reaction('cookies', 'yum!!'),
+    reaction('amigay', 'try >amigay')
 ]
 
 class Client(discord.Client):
@@ -151,6 +154,8 @@ class Client(discord.Client):
             for command in command_list:
                 if (await command.handle(message, words)) is True:
                     return
+        if message.author.id == 235088799074484224:
+            await message.channel.send('!help')
 
 client = Client()
 
