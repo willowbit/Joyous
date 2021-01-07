@@ -57,6 +57,9 @@ async def gaytest(words, trigger, message):
         time.sleep(2.6)
         await message.channel.send(f'I can confirm that {x} **{rnd.choice(gayornotgay)}** gay')
 
+async def say(words, trigger, message):
+    await message.channel.purge(limit=1)
+    await message.channel.send(' '.join(words[1:]))
 
 class botcommand:
     def __init__(self, trigger, response):
@@ -79,7 +82,8 @@ command_list = [
     botcommand('all', all),
     botcommand('help', help),
     botcommand('amigay', gaytest),
-    botcommand('sing', 'lalala')
+    botcommand('panic', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA!!!!!!'),
+    botcommand('say', say)
 ]
 
 class reaction:
