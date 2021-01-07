@@ -13,6 +13,16 @@ qst = rnd.choice(questions)
 qstq = qst.question
 qstex = qst.example
 
+command_embed = discord.Embed(title='Commands', description="""
+**>commands** - shows this screen
+**>hello** - hello!!
+**>add [x]** - allows you to add [x] to the gratitude wall
+**>help** - displays the help screen
+**>amigay [x]** - discerns if you, or x if provided, are gay
+**>say [x]** - makes joyous say [x], your message will be deleted
+
+""")
+
 help_embed = discord.Embed(title='Joyous Help', description="Hi! I'm Joyous, your discord positivity bot!", color=0xff6bc9)
 help_embed.add_field(name='What do I do?', value="I keep your server positive with a daily reflection. I also have a wall where people can save their responses.")
 help_embed.add_field(name="How do I use Joyous?", value="You can talk to me by using '>' and whatever you want me to do. You can find a list of commands with >commands.")
@@ -44,7 +54,7 @@ async def help(words, trigger, message):
     await message.channel.send(embed = help_embed)
     awaiting_response = True
 
-async def gaytest(words, trigger, message):
+async def amigay(words, trigger, message):
     x = ' '.join(words[1:])
     if len(words) == 1:
         gayornotgay = ['not', 'in fact']
@@ -60,6 +70,9 @@ async def gaytest(words, trigger, message):
 async def say(words, trigger, message):
     await message.channel.purge(limit=1)
     await message.channel.send(' '.join(words[1:]))
+
+async def commands(words, trigger, message):
+    await message.channel.send(embed = command_embed)
 
 class botcommand:
     def __init__(self, trigger, response):
@@ -81,9 +94,10 @@ command_list = [
     botcommand('random', random),
     botcommand('all', all),
     botcommand('help', help),
-    botcommand('amigay', gaytest),
+    botcommand('amigay', amigay),
     botcommand('panic', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA!!!!!!'),
-    botcommand('say', say)
+    botcommand('say', say),
+    botcommand('commands', commands),
 ]
 
 class reaction:
