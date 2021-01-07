@@ -156,4 +156,4 @@ class Client(discord.Client):
                     await success(content[1:], message)
 
 client = Client()
-client.run()
+client.run('token')
