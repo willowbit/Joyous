@@ -110,7 +110,20 @@ command_list = [
     botcommand('help', help),
     botcommand('thewall', thewall),
     botcommand('amigay', gaytest),
-    botcommand('panic', panic)
+    botcommand('panic', panic),
+]
+
+class reaction:
+    def __init__(self, trigger, response):
+        self.trigger = trigger
+        self.response = response
+    async def handle(self, message, words):
+        if words == self.trigger:
+            await message.channel.send(self.response)
+
+reaction_list = [
+    reaction('hello', 'Nice to see you!'),
+    reaction('bleh', 'yeah same bro'),
 ]
 
 class Client(discord.Client):
@@ -119,13 +132,20 @@ class Client(discord.Client):
         print(self.user.name)
         print(self.user.id)
         print('--------------')
-        print('THIS THING:',current_question)
+        # print('THIS THING:',current_question)
 
     async def on_message(self, message: discord.Message):
         content = message.content
         print(message.author, content)
         
         if message.author.id == self.user.id:
+            return
+
+        for r in reaction_list:
+            words = content
+            print(words)
+            if words == r.trigger:
+                await r.handle(message, words)
             return
 
         if content.startswith(comand_prefix):
@@ -156,4 +176,7 @@ class Client(discord.Client):
                     await success(content[1:], message)
 
 client = Client()
-client.run('token')
+
+with open('botcode.txt') as f:
+    code = f.read()
+client.run(code)
