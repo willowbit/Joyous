@@ -48,7 +48,9 @@ async def random(words, trigger, message):
 
 async def all(words, trigger, message):
     joys = fetch_joys()
-    await message.channel.send(f'here are all the joys in my library......{joys}')
+    nl = '\n'
+    sep = ', '
+    await message.channel.send(f'here are all the joys in my library......{nl}**{sep.join(joys)}**')
 
 async def help(words, trigger, message):
     await message.channel.send(embed = help_embed)
