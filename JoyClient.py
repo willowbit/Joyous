@@ -123,6 +123,7 @@ class reaction:
 reaction_list = [
     reaction('hello', 'Nice to see you!'),
     reaction('bleh', 'yeah same bro'),
+    reaction('cookies', 'yum!!'),
 ]
 
 class Client(discord.Client):
@@ -142,10 +143,9 @@ class Client(discord.Client):
 
         for r in reaction_list:
             words = content
-            print(words)
             if words == r.trigger:
                 await r.handle(message, words)
-            return
+                return
 
         if content.startswith(comand_prefix):
             words = content[1:].split()
