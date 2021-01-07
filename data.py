@@ -2,6 +2,7 @@ import discord
 import random as rnd
 import json
 
+
 def add_joy(joy):
 ###dump the joy
     with open('joydata.json', 'r') as f:
