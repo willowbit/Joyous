@@ -1,11 +1,15 @@
+import schedule
 import time
 import discord
+from discord.ext import commands, tasks
+from discord import ext
 import random as rnd
 from discord import client
 from data import add_joy
-from data import fetch_joys
+from data import fetch_joys, fetch_song
 from data import questions
 from data import remove_joy
+from data import add_song
 import json
 
 author_blacklist = []
@@ -29,11 +33,10 @@ command_embed = discord.Embed(title='Commands', description="""
 """, color=0xff6bc9)
 
 help_embed = discord.Embed(title='Joyous Help', description="Hi! I'm Joyous, your discord positivity bot!", color=0xff6bc9)
-help_embed.add_field(name='What do I do?', value="I keep your server positive with a daily reflection. I also have a wall where people can save their responses.")
-help_embed.add_field(name="How do I use Joyous?", value="You can talk to me by using '>' and whatever you want me to do. You can find a list of commands with >commands.")
-help_embed.set_footer(text='under progress by willy! (WaffleBread#5131) you can find the project here: https://github.com/CuteBlueRadio/Joyous')
+help_embed.add_field(name='What do I do?', value="I keep your server a nice, clean place where you and your friends can hang out. Check out the project at https://github.com/CuteBlueRadio/Joyous")
+help_embed.add_field(name="How do I use Joyous?", value="Talk to me by using '>' + whatever you would like me to do. You can ask find a list of my tools with '>commands'")
+help_embed.set_footer(text='under progress by willy! (WaffleBread#5131), contact me with bugs :)')
 
-wall_embed = discord.Embed(title='The Wall', description="Here's where all of your opted daily reflection responses are stored! Everyone can see this.", color=0xff6bc9)
 
 comand_prefix = '>'
 
@@ -72,12 +75,12 @@ async def amigay(words, trigger, message):
         gayornotgay = ['not', 'in fact']
         await message.channel.send('calculating gayness......')
         time.sleep(2.6)
-        await message.channel.send(f'I can confirm you are **{rnd.choice(gayornotgay)}** gay')
+        await message.channel.send(f'{message.author.mention} I can confirm you are **{rnd.choice(gayornotgay)}** gay')
     else:
         gayornotgay = ['is not', 'is in fact']
         await message.channel.send('calculating gayness......')
         time.sleep(2.6)
-        await message.channel.send(f'I can confirm that {x} **{rnd.choice(gayornotgay)}** gay')
+        await message.channel.send(f'{message.author.mention} I can confirm that {x} **{rnd.choice(gayornotgay)}** gay')
 
 async def say(words, trigger, message):
     await message.channel.purge(limit=1)
@@ -95,6 +98,11 @@ async def delete(words, trigger, message):
     else:
         x = (int(words[1]) + 1)
     await message.channel.purge(limit=x)
+
+async def addsong(words, trigger, message):
+    formatsong = ' '.join(words[1:])
+    add_song(formatsong)
+    await message.channel.send(f'{message.author.mention} "{formatsong}" has been added to my playlist!')
 
 class botcommand:
     def __init__(self, trigger, response):
@@ -121,7 +129,8 @@ command_list = [
     botcommand('commands', commands),
     botcommand('remove', remove),
     botcommand('kill', kill),
-    botcommand('d', delete)
+    botcommand('d', delete),
+    botcommand('addsong', addsong),
 ]
 
 class reaction:
@@ -139,17 +148,22 @@ reaction_list = [
     reaction('amigay', 'try >amigay')
 ]
 
+@tasks.loop(seconds=10)
+async def change_status():
+    playlist = fetch_song()
+    await client.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=(rnd.choice(playlist))))
+
 class Client(discord.Client):
     async def on_ready(self):
         print('Logged in as')
         print(self.user.name)
         print(self.user.id)
         print('--------------')
-        await client.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="Guster on Ice - Live from Portland, Maine"))
+        change_status.start()
     async def on_message(self, message: discord.Message):
         content = message.content
         print(message.author, content)
-        
+
         if message.author.id == self.user.id:
             return
 
@@ -166,6 +180,7 @@ class Client(discord.Client):
                     return
         if message.author.id == 235088799074484224:
             await message.channel.send('!help')
+
 
 client = Client()
 
