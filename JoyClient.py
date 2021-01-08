@@ -23,6 +23,8 @@ command_embed = discord.Embed(title='Commands', description="""
 
 **>amigay [x]** - discerns if you, or x if provided, are gay
 **>say [x]** - makes joyous say [x], your message will be deleted
+
+**>d [x]** - deletes [x] number of the previous messages, your message will be deleted
 **>kill** - kills Joyous. Use only in case of emergency.
 """, color=0xff6bc9)
 
@@ -87,6 +89,13 @@ async def commands(words, trigger, message):
 async def kill(words, trigger, message):
     exit()
 
+async def delete(words, trigger, message):
+    if len(words) == 1:
+        x = 2
+    else:
+        x = (int(words[1]) + 1)
+    await message.channel.purge(limit=x)
+
 class botcommand:
     def __init__(self, trigger, response):
         self.trigger = trigger
@@ -112,6 +121,7 @@ command_list = [
     botcommand('commands', commands),
     botcommand('remove', remove),
     botcommand('kill', kill),
+    botcommand('d', delete)
 ]
 
 class reaction:
@@ -135,7 +145,7 @@ class Client(discord.Client):
         print(self.user.name)
         print(self.user.id)
         print('--------------')
-
+        await client.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="Guster on Ice - Live from Portland, Maine"))
     async def on_message(self, message: discord.Message):
         content = message.content
         print(message.author, content)
