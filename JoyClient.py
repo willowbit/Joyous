@@ -24,7 +24,7 @@ command_embed = discord.Embed(title='Commands', description="""
 **>amigay [x]** - discerns if you, or x if provided, are gay
 **>say [x]** - makes joyous say [x], your message will be deleted
 **>kill** - kills Joyous. Use only in case of emergency.
-""")
+""", color=0xff6bc9)
 
 help_embed = discord.Embed(title='Joyous Help', description="Hi! I'm Joyous, your discord positivity bot!", color=0xff6bc9)
 help_embed.add_field(name='What do I do?', value="I keep your server positive with a daily reflection. I also have a wall where people can save their responses.")
@@ -58,7 +58,7 @@ async def all(words, trigger, message):
     joys = fetch_joys()
     nl = '\n'
     sep = ', '
-    await message.channel.send(f'here are all the joys in my library......{nl}**{sep.join(joys)}**')
+    await message.channel.send(f'{message.author.mention} here are all the joys in my library......{nl}**{sep.join(joys)}**')
 
 async def help(words, trigger, message):
     await message.channel.send(embed = help_embed)
