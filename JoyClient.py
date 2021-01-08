@@ -148,7 +148,7 @@ reaction_list = [
     reaction('amigay', 'try >amigay')
 ]
 
-@tasks.loop(seconds=10)
+@tasks.loop(seconds=25)
 async def change_status():
     playlist = fetch_song()
     await client.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=(rnd.choice(playlist))))
