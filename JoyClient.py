@@ -1,6 +1,7 @@
 import schedule
 import time
 import discord
+import ctx
 from discord.ext import commands, tasks
 from discord import ext
 import random as rnd
@@ -22,8 +23,10 @@ command_embed = discord.Embed(title='Commands', description="""
 **>commands** - shows this screen
 **>help** - displays the help screen
 
-**>add [x]** - allows you to add [x] to the gratitude wall
-**>remove [x]** - allows you to remove [x] to the gratitude wall
+**>joy.add [x]** - allows you to add [x] to the joy wall
+**>joy.remove [x]** - allows you to remove [x] to the joy wall
+**>joy.wall** - displays the joy wall
+**joy.random** - displays a random joy from the joy wall
 
 **>amigay [x]** - discerns if you, or x if provided, are gay
 **>say [x]** - makes joyous say [x], your message will be deleted
@@ -36,6 +39,8 @@ help_embed = discord.Embed(title='Joyous Help', description="Hi! I'm Joyous, you
 help_embed.add_field(name='What do I do?', value="I keep your server a nice, clean place where you and your friends can hang out. Check out the project at https://github.com/CuteBlueRadio/Joyous")
 help_embed.add_field(name="How do I use Joyous?", value="Talk to me by using '>' + whatever you would like me to do. You can ask find a list of my tools with '>commands'")
 help_embed.set_footer(text='under progress by willy! (WaffleBread#5131), contact me with bugs :)')
+
+joy_embed = discord.Embed(title='welcome to the joy wall!', description='this is where everyone comes together to share the little things in life that they enjoy. You can add one with ">joy.add", and view the wall with "joy.wall"')
 
 
 comand_prefix = '>'
@@ -104,6 +109,14 @@ async def addsong(words, trigger, message):
     add_song(formatsong)
     await message.channel.send(f'{message.author.mention} "{formatsong}" has been added to my playlist!')
 
+async def joydescript(words, trigger, message):
+    await message.channel.send(embed = joy_embed)
+
+async def test(ctx):
+    async with ctx.typing():
+        await time.sleep(5)
+    await message.channel.send('yalll gayyyyy')
+
 class botcommand:
     def __init__(self, trigger, response):
         self.trigger = trigger
@@ -119,15 +132,19 @@ class botcommand:
             return False
 
 command_list = [
-    botcommand('add', add),
-    botcommand('random', random),
-    botcommand('all', all),
+    botcommand('joy', joydescript),
+    botcommand('joy.add', add),
+    botcommand('add', add)
+    botcommand('joy.random', random),
+    botcommand('random', random)
+    botcommand('joy.wall', all),
+    botcommand('wall', all)
     botcommand('help', help),
     botcommand('amigay', amigay),
     botcommand('panic', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA!!!!!!'),
     botcommand('say', say),
     botcommand('commands', commands),
-    botcommand('remove', remove),
+    botcommand('joy.remove', remove),
     botcommand('kill', kill),
     botcommand('d', delete),
     botcommand('addsong', addsong),
@@ -163,6 +180,10 @@ class Client(discord.Client):
     async def on_message(self, message: discord.Message):
         content = message.content
         print(message.author, content)
+
+        if content == '>test':
+            print('YAHOOO')
+            await test()
 
         if message.author.id == self.user.id:
             return
