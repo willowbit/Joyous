@@ -6,11 +6,8 @@ from discord.ext import commands, tasks
 from discord import ext
 import random as rnd
 from discord import client
-from data import add_joy
-from data import fetch_joys, fetch_song
 from data import questions
 from data import remove_joy
-from data import add_song
 from data import addtofile
 from data import fetch_file
 import json
@@ -25,10 +22,10 @@ command_embed = discord.Embed(title='Commands', description="""
 **>commands** - shows this screen
 **>help** - displays the help screen
 
-**>joy.add [x]** - allows you to add [x] to the joy wall
-**>joy.remove [x]** - allows you to remove [x] to the joy wall
-**>joy.wall** - displays the joy wall
-**joy.random** - displays a random joy from the joy wall
+**>add [x]** - allows you to add [x] to the joy wall
+**>remove [x]** - allows you to remove [x] from the joy wall
+**>wall** - displays the joy wall
+**>random** - displays a random joy from the joy wall
 
 **>amigay [x]** - discerns if you, or x if provided, are gay
 **>say [x]** - makes joyous say [x], your message will be deleted
@@ -42,8 +39,6 @@ help_embed.add_field(name='What do I do?', value="I keep your server a nice, cle
 help_embed.add_field(name="How do I use Joyous?", value="Talk to me by using '>' + whatever you would like me to do. You can ask find a list of my tools with '>commands'")
 help_embed.set_footer(text='under progress by willy! (WaffleBread#5131), contact me with bugs :)')
 
-joy_embed = discord.Embed(title='welcome to the joy wall!', description='this is where everyone comes together to share the little things in life that they enjoy. You can add one with ">joy.add", and view the wall with "joy.wall"')
-
 
 comand_prefix = '>'
 
@@ -51,7 +46,7 @@ comand_prefix = '>'
 async def add(words, trigger, message):
     words.remove(trigger)
     x = ' '.join(words)
-    add_joy(x)
+    addtofile(x, 'joydata.json')
     await message.channel.send(f'{message.author.mention} "{x}" has been added to my library!')
 
 async def remove(words, trigger, message):
@@ -67,7 +62,7 @@ async def random(words, trigger, message):
     await message.channel.send(f"I'm grateful for...**{rnd.choice(joys)}**")
 
 async def all(words, trigger, message):
-    joys = fetch_joys()
+    joys = fetch_file('joydata.json')
     nl = '\n'
     sep = ', '
     await message.channel.send(f'{message.author.mention} here are all the joys in my library......{nl}**{sep.join(joys)}**')
@@ -124,14 +119,8 @@ async def addsong(words, trigger, message):
     addtofile(formatsong, 'playlist.json')
     await message.channel.send(f'{message.author.mention} "{formatsong}" has been added to my playlist!')
 
-
 async def joydescript(words, trigger, message):
     await message.channel.send(embed = joy_embed)
-
-async def test(ctx):
-    async with ctx.typing():
-        await time.sleep(5)
-    await message.channel.send('yalll gayyyyy')
 
 class botcommand:
     def __init__(self, trigger, response):
@@ -148,12 +137,9 @@ class botcommand:
             return False
 
 command_list = [
-    botcommand('joy', joydescript),
-    botcommand('joy.add', add),
     botcommand('add', add),
-    botcommand('joy.random', random),
+    botcommand('remove', remove),
     botcommand('random', random),
-    botcommand('joy.wall', all),
     botcommand('wall', all),
     botcommand('help', help),
     botcommand('amigay', amigay),
@@ -161,7 +147,6 @@ command_list = [
     botcommand('panic', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA!!!!!!'),
     botcommand('say', say),
     botcommand('commands', commands),
-    botcommand('joy.remove', remove),
     botcommand('kill', kill),
     botcommand('d', delete),
     botcommand('addsong', addsong),
