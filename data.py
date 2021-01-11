@@ -38,6 +38,18 @@ def fetch_song():
         playlist = json.load(f)
         return playlist
 
+def addtofile(item, file):
+    with open(file, 'r') as f:
+        itemlist = json.load(f)
+    itemlist.append(item)
+    with open(file, 'w+') as f:
+        json.dump(itemlist, f)
+
+def fetch_file(file):
+    with open(f'{file}', 'r') as f:
+        itemlist = json.load(f)
+        return itemlist
+
 class question:
     def __init__(self, question, example):
         self.question = question

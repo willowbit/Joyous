@@ -11,6 +11,8 @@ from data import fetch_joys, fetch_song
 from data import questions
 from data import remove_joy
 from data import add_song
+from data import addtofile
+from data import fetch_file
 import json
 
 author_blacklist = []
@@ -104,10 +106,24 @@ async def delete(words, trigger, message):
         x = (int(words[1]) + 1)
     await message.channel.purge(limit=x)
 
+async def amicommunist(words, trigger, message):
+    x = ' '.join(words[1:])
+    if len(words) == 1:
+        communist = ['not', 'in fact', 'in fact', 'in fact']
+        await message.channel.send('calculating communism......')
+        time.sleep(2.6)
+        await message.channel.send(f'{message.author.mention} I can confirm you are **{rnd.choice(communist)}** a communist')
+    else:
+        gayornotgay = ['is not', 'is in fact', 'is in fact', 'is in fact']
+        await message.channel.send('calculating communism......')
+        time.sleep(2.6)
+        await message.channel.send(f'{message.author.mention} I can confirm that {x} **{rnd.choice(communist)}** a communist')
+
 async def addsong(words, trigger, message):
     formatsong = ' '.join(words[1:])
-    add_song(formatsong)
+    addtofile(formatsong, 'playlist.json')
     await message.channel.send(f'{message.author.mention} "{formatsong}" has been added to my playlist!')
+
 
 async def joydescript(words, trigger, message):
     await message.channel.send(embed = joy_embed)
@@ -134,13 +150,14 @@ class botcommand:
 command_list = [
     botcommand('joy', joydescript),
     botcommand('joy.add', add),
-    botcommand('add', add)
+    botcommand('add', add),
     botcommand('joy.random', random),
-    botcommand('random', random)
+    botcommand('random', random),
     botcommand('joy.wall', all),
-    botcommand('wall', all)
+    botcommand('wall', all),
     botcommand('help', help),
     botcommand('amigay', amigay),
+    botcommand('amicommunist', amicommunist),   
     botcommand('panic', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA!!!!!!'),
     botcommand('say', say),
     botcommand('commands', commands),
@@ -199,8 +216,7 @@ class Client(discord.Client):
             for command in command_list:
                 if (await command.handle(message, words)) is True:
                     return
-        if message.author.id == 235088799074484224:
-            await message.channel.send('!help')
+
 
 
 client = Client()
