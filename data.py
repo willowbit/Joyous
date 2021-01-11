@@ -35,6 +35,9 @@ questions = [
     question("Something I accomplished today was......", "Something I accomplished today was finishing all my homework!")
 ]
 
+msg_blacklist = [
+    'faggot', 'fag', 'nigger', 'nigga', 'kill yourself', 'kill urself', 'fucker', 'mother fucker', 'tranny', 'sweartest'
+]
 
 def roll():
     qst = rnd.choice(questions)

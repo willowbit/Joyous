@@ -2,15 +2,12 @@ import schedule
 import time
 import discord
 import ctx
-from discord.ext import commands, tasks
-from discord import ext
-import random as rnd
-from discord import client
-from data import questions
-from data import remove_joy
-from data import addtofile
-from data import fetch_file
 import json
+import random as rnd
+from embeds import command_embed, help_embed
+from discord.ext import commands, tasks
+from discord import ext, client
+from data import questions, remove_joy, addtofile, fetch_file, msg_blacklist
 
 author_blacklist = []
 
@@ -18,30 +15,7 @@ qst = rnd.choice(questions)
 qstq = qst.question
 qstex = qst.example
 
-command_embed = discord.Embed(title='Commands', description="""
-**>commands** - shows this screen
-**>help** - displays the help screen
-
-**>add [x]** - allows you to add [x] to the joy wall
-**>remove [x]** - allows you to remove [x] from the joy wall
-**>wall** - displays the joy wall
-**>random** - displays a random joy from the joy wall
-
-**>amigay [x]** - discerns if you, or x if provided, are gay
-**>say [x]** - makes joyous say [x], your message will be deleted
-
-**>d [x]** - deletes [x] number of the previous messages, your message will be deleted
-**>kill** - kills Joyous. Use only in case of emergency.
-""", color=0xff6bc9)
-
-help_embed = discord.Embed(title='Joyous Help', description="Hi! I'm Joyous, your discord positivity bot!", color=0xff6bc9)
-help_embed.add_field(name='What do I do?', value="I keep your server a nice, clean place where you and your friends can hang out. Check out the project at https://github.com/CuteBlueRadio/Joyous")
-help_embed.add_field(name="How do I use Joyous?", value="Talk to me by using '>' + whatever you would like me to do. You can ask find a list of my tools with '>commands'")
-help_embed.set_footer(text='under progress by willy! (WaffleBread#5131), contact me with bugs :)')
-
-
 comand_prefix = '>'
-
 
 async def add(words, trigger, message):
     words.remove(trigger)
@@ -169,7 +143,7 @@ reaction_list = [
 
 @tasks.loop(seconds=25)
 async def change_status():
-    playlist = fetch_song()
+    playlist = fetch_file('playlist.json')
     await client.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=(rnd.choice(playlist))))
 
 class Client(discord.Client):
@@ -180,15 +154,19 @@ class Client(discord.Client):
         print('--------------')
         change_status.start()
     async def on_message(self, message: discord.Message):
+
         content = message.content
         print(message.author, content)
 
-        if content == '>test':
-            print('YAHOOO')
-            await test()
-
         if message.author.id == self.user.id:
             return
+
+        print(msg_blacklist)
+        for w in msg_blacklist:
+            print(content)
+            if w in content:
+                msg_response1 = 'That is not appropriate to say to anyone. Please watch your language.'
+                await message.channel.send(msg_response1)
 
         for r in reaction_list:
             words = content
