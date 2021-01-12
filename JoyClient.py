@@ -156,14 +156,12 @@ class Client(discord.Client):
     async def on_message(self, message: discord.Message):
 
         content = message.content
-        print(message.author, content)
+        print(f'{message.author}: {content}')
 
         if message.author.id == self.user.id:
             return
 
-        print(msg_blacklist)
         for w in msg_blacklist:
-            print(content)
             if w in content:
                 msg_response1 = 'That is not appropriate to say to anyone. Please watch your language.'
                 await message.channel.send(msg_response1)
