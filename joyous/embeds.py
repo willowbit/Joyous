@@ -19,4 +19,4 @@ command_embed = discord.Embed(title='Commands', description="""
 help_embed = discord.Embed(title='Joyous Help', description="Hi! I'm Joyous, your discord positivity bot!", color=0xff6bc9)
 help_embed.add_field(name='What do I do?', value="I keep your server a nice, clean place where you and your friends can hang out. Check out the project at https://github.com/CuteBlueRadio/Joyous")
 help_embed.add_field(name="How do I use Joyous?", value="Talk to me by using '>' + whatever you would like me to do. You can ask find a list of my tools with '>commands'")
-help_embed.set_footer(text='under progress by willy! (WaffleBread#5131), contact me with bugs :)')
+help_embed.set_footer(text='under progress by willy! (willow#5131), contact me with bugs or ideas :)')
