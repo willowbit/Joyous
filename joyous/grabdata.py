@@ -1,9 +1,13 @@
-import discord, json, os
+import discord, json, os.path
 import random as rnd
 
 def addtofile(item, file):
     thisdir = os.path.dirname(os.path.realpath(__file__))
     fname = f'{thisdir}/../data/{file}'
+    if os.path.isfile(fname) == False:
+        open(fname, 'x')
+        with open(fname, 'w') as f:
+            f.write('[]')
     with open(fname, 'r') as f:
         itemlist = json.load(f)
     itemlist.append(item)

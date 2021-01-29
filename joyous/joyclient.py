@@ -7,7 +7,6 @@ from .embeds import help_embed, command_embed
 comand_prefix = '>'
 
 async def add(words, trigger, message):
-    print('TRIGGERED---')
     words.remove(trigger)
     x = ' '.join(words)
     addtofile(x, f'joydata{message.author.guild.id}.json')
