@@ -18,6 +18,8 @@ async def remove(words, trigger, message):
     print('---------------------')
     print(x)
     removefromfile(x, f'joydata{message.author.guild.id}.json')
+    if False:
+        message.channel.send('The wall is empty! Add joys to it with >add')
     await message.channel.send(f'{message.author.mention} "{x}" has been removed from my library.')
 
 async def random(words, trigger, message):
@@ -107,7 +109,6 @@ class Client(discord.Client):
     async def on_message(self, message: discord.Message):
 
         content = message.content
-        print(f'{message.author}: {content}')
 
         if message.author.id == self.user.id:
             return
