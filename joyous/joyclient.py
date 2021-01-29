@@ -1,26 +1,16 @@
-import schedule
-import time
-import discord
-import ctx
-import json
+import schedule, time, discord, ctx, json, os
 import random as rnd
-from embeds import command_embed, help_embed
 from discord.ext import commands, tasks
-from discord import ext, client
-from data import questions, remove_joy, addtofile, fetch_file, msg_blacklist
-
-author_blacklist = []
-
-qst = rnd.choice(questions)
-qstq = qst.question
-qstex = qst.example
-
+from discord import ext
+from .grabdata import addtofile, fetch_file, msg_blacklist, removefromfile
+from .embeds import help_embed, command_embed
 comand_prefix = '>'
 
 async def add(words, trigger, message):
+    print('TRIGGERED---')
     words.remove(trigger)
     x = ' '.join(words)
-    addtofile(x, 'joydata.json')
+    addtofile(x, f'joydata{message.author.guild.id}.json')
     await message.channel.send(f'{message.author.mention} "{x}" has been added to my library!')
 
 async def remove(words, trigger, message):
@@ -28,15 +18,15 @@ async def remove(words, trigger, message):
     x = ' '.join(words)
     print('---------------------')
     print(x)
-    remove_joy(x)
+    removefromfile(x, f'joydata{message.author.guild.id}.json')
     await message.channel.send(f'{message.author.mention} "{x}" has been removed from my library.')
 
 async def random(words, trigger, message):
-    joys = fetch_joys()
+    joys = fetch_file(f'joydata{message.author.guild.id}.json')
     await message.channel.send(f"I'm grateful for...**{rnd.choice(joys)}**")
 
 async def all(words, trigger, message):
-    joys = fetch_file('joydata.json')
+    joys = fetch_file(f'joydata{message.author.guild.id}.json')
     nl = '\n'
     sep = ', '
     await message.channel.send(f'{message.author.mention} here are all the joys in my library......{nl}**{sep.join(joys)}**')
@@ -65,9 +55,6 @@ async def say(words, trigger, message):
 async def commands(words, trigger, message):
     await message.channel.send(embed = command_embed)
 
-async def kill(words, trigger, message):
-    exit()
-
 async def delete(words, trigger, message):
     if len(words) == 1:
         x = 2
@@ -75,26 +62,7 @@ async def delete(words, trigger, message):
         x = (int(words[1]) + 1)
     await message.channel.purge(limit=x)
 
-async def amicommunist(words, trigger, message):
-    x = ' '.join(words[1:])
-    if len(words) == 1:
-        communist = ['not', 'in fact', 'in fact', 'in fact']
-        await message.channel.send('calculating communism......')
-        time.sleep(2.6)
-        await message.channel.send(f'{message.author.mention} I can confirm you are **{rnd.choice(communist)}** a communist')
-    else:
-        gayornotgay = ['is not', 'is in fact', 'is in fact', 'is in fact']
-        await message.channel.send('calculating communism......')
-        time.sleep(2.6)
-        await message.channel.send(f'{message.author.mention} I can confirm that {x} **{rnd.choice(communist)}** a communist')
 
-async def addsong(words, trigger, message):
-    formatsong = ' '.join(words[1:])
-    addtofile(formatsong, 'playlist.json')
-    await message.channel.send(f'{message.author.mention} "{formatsong}" has been added to my playlist!')
-
-async def joydescript(words, trigger, message):
-    await message.channel.send(embed = joy_embed)
 
 class botcommand:
     def __init__(self, trigger, response):
@@ -110,6 +78,7 @@ class botcommand:
         else:
             return False
 
+
 command_list = [
     botcommand('add', add),
     botcommand('remove', remove),
@@ -117,28 +86,11 @@ command_list = [
     botcommand('wall', all),
     botcommand('help', help),
     botcommand('amigay', amigay),
-    botcommand('amicommunist', amicommunist),   
     botcommand('panic', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA!!!!!!'),
     botcommand('say', say),
     botcommand('commands', commands),
-    botcommand('kill', kill),
     botcommand('d', delete),
-    botcommand('addsong', addsong),
-]
-
-class reaction:
-    def __init__(self, trigger, response):
-        self.trigger = trigger
-        self.response = response
-    async def handle(self, message, words):
-        if words == self.trigger:
-            await message.channel.send(self.response)
-
-reaction_list = [
-    reaction('hello', 'Nice to see you!'),
-    reaction('bleh', 'yeah same bro'),
-    reaction('cookies', 'yum!!'),
-    reaction('amigay', 'try >amigay')
+    botcommand('hello', 'Nice to see you!')
 ]
 
 @tasks.loop(seconds=25)
@@ -166,22 +118,14 @@ class Client(discord.Client):
                 msg_response1 = 'That is not appropriate to say to anyone. Please watch your language.'
                 await message.channel.send(msg_response1)
 
-        for r in reaction_list:
-            words = content
-            if words == r.trigger:
-                await r.handle(message, words)
-                return
-
         if content.startswith(comand_prefix):
             words = content[1:].split()
             for command in command_list:
                 if (await command.handle(message, words)) is True:
                     return
-
-
-
 client = Client()
 
-with open('botcode.txt') as f:
-    code = f.read()
-client.run(code)
+def run_client():
+    with open('botcode.txt') as f:
+        code = f.read()
+    client.run(code)
