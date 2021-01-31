@@ -4,7 +4,10 @@ from discord.ext import commands, tasks
 from discord import ext
 from .grabdata import addtofile, fetch_file, msg_blacklist, removefromfile
 from .embeds import help_embed, command_embed
+
+### Change this for the symbol before commands
 comand_prefix = '>'
+
 
 async def add(words, trigger, message):
     words.remove(trigger)
@@ -64,11 +67,12 @@ async def delete(words, trigger, message):
     await message.channel.purge(limit=x)
 
 async def announce(words, trigger, message):
-    print('aa')
     if message.author.id == 534925555699548160:
-        channel.send('This is a test. AAAAAAaa')
-    else:
-        return False
+        for Guild in client.guilds:
+            for channel in Guild.channels:
+                if channel.type == discord.ChannelType.text:
+                    if channel.name == 'general':
+                        await channel.send(' '.join(words[1:]))
 
 class botcommand:
     def __init__(self, trigger, response):
