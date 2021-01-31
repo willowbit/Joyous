@@ -31,5 +31,5 @@ def fetch_file(file):
         return itemlist
 
 msg_blacklist = [
-    'faggot', 'fag', 'nigger', 'nigga', 'kill yourself', 'kill urself', 'fucker', 'mother fucker', 'tranny', 'sweartest'
+    'faggot', 'fag', 'nigger', 'nigga', 'kill yourself', 'kill urself', 'tranny', 'sweartest', 'Faggot', 'Fag', 'Nigger', 'Nigga', 'Tranny'
 ]

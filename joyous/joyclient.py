@@ -63,7 +63,12 @@ async def delete(words, trigger, message):
         x = (int(words[1]) + 1)
     await message.channel.purge(limit=x)
 
-
+async def announce(words, trigger, message):
+    print('aa')
+    if message.author.id == 534925555699548160:
+        channel.send('This is a test. AAAAAAaa')
+    else:
+        return False
 
 class botcommand:
     def __init__(self, trigger, response):
@@ -91,7 +96,8 @@ command_list = [
     botcommand('say', say),
     botcommand('commands', commands),
     botcommand('d', delete),
-    botcommand('hello', 'Nice to see you!')
+    botcommand('hello', 'Nice to see you!'),
+    botcommand('announce', announce),
 ]
 
 @tasks.loop(seconds=25)
