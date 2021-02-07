@@ -100,7 +100,7 @@ command_list = [
     botcommand('say', say),
     botcommand('commands', commands),
     botcommand('d', delete),
-    botcommand('hello', 'Nice to see you!'),
+    botcommand('hello', 'nice to see you!'),
     botcommand('announce', announce),
 ]
 
@@ -120,19 +120,28 @@ class Client(discord.Client):
 
         content = message.content
 
+        ### Make sure the bot doesn't reply to itself
         if message.author.id == self.user.id:
             return
 
+        ### Filter
         for w in msg_blacklist:
             if w in content:
                 msg_response1 = 'That is not appropriate to say to anyone. Please watch your language.'
                 await message.channel.send(msg_response1)
-
+        
+        ### If message is command
         if content.startswith(comand_prefix):
             words = content[1:].split()
             for command in command_list:
                 if (await command.handle(message, words)) is True:
                     return
+
+        ### Accasional announcements
+        if rnd.randint(1,300) == 193:
+            time.sleep(27)
+            message.channel.send('there was a 1 in 300 chance that this message was sent. this is testing to make sure it works.')
+
 client = Client()
 
 def run_client():
