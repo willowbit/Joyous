@@ -75,8 +75,10 @@ async def announce(words, trigger, message):
         for Guild in client.guilds:
             for channel in Guild.channels:
                 if channel.type == discord.ChannelType.text:
-                    if channel.name == 'general':
-                        await channel.send(' '.join(words[1:]))
+                    if channel.name in ['ai-testing-initiative', 'bots']:
+                        joinf = ' '.join(words[1:])
+                        msg = f'ANNOUNCEMENT: {joinf}'
+                        await channel.send(msg)
 
 class botcommand:
     def __init__(self, trigger, response):
