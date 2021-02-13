@@ -54,7 +54,12 @@ async def amigay(words, trigger, message):
 
 async def say(words, trigger, message):
     await message.channel.purge(limit=1)
-    await message.channel.send(' '.join(words[1:]))
+    if message.author.id == 534925555699548160:
+        for word in msg_blacklist:
+            if word in words:
+                await message.channel.send('I cannot say that.')
+                return
+        await message.channel.send(' '.join(words[1:]))
 
 async def commands(words, trigger, message):
     await message.channel.send(embed = command_embed)
