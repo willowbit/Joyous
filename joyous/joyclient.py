@@ -12,7 +12,7 @@ comand_prefix = '>'
 async def add(words, trigger, message):
     words.remove(trigger)
     x = ' '.join(words)
-    addtofile(x, f'joydata{message.author.guild.id}.json')
+    addtofile(x, f'server{message.author.guild.id}.yaml')
     await message.channel.send(f'{message.author.mention} "{x}" has been added to my library!')
 
 async def remove(words, trigger, message):
@@ -20,17 +20,17 @@ async def remove(words, trigger, message):
     x = ' '.join(words)
     print('---------------------')
     print(x)
-    removefromfile(x, f'joydata{message.author.guild.id}.json')
+    removefromfile(x, f'server{message.author.guild.id}.yaml')
     if False:
         message.channel.send('The wall is empty! Add joys to it with >add')
     await message.channel.send(f'{message.author.mention} "{x}" has been removed from my library.')
 
 async def random(words, trigger, message):
-    joys = fetch_file(f'joydata{message.author.guild.id}.json')
+    joys = fetch_file(f'server{message.author.guild.id}.yaml')
     await message.channel.send(f"I'm grateful for...**{rnd.choice(joys)}**")
 
 async def all(words, trigger, message):
-    joys = fetch_file(f'joydata{message.author.guild.id}.json')
+    joys = fetch_file(f'server{message.author.guild.id}.yaml')
     nl = '\n'
     sep = ', '
     await message.channel.send(f'{message.author.mention} here are all the joys in my library......{nl}**{sep.join(joys)}**')
@@ -112,7 +112,7 @@ command_list = [
 
 @tasks.loop(seconds=25)
 async def change_status():
-    playlist = fetch_file('playlist.json')
+    playlist = fetch_file('playlist.yaml')
     await client.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=(rnd.choice(playlist))))
 
 class Client(discord.Client):
