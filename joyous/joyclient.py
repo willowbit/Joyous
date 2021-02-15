@@ -78,6 +78,21 @@ async def announce(words, trigger, message):
                         msg = f'ANNOUNCEMENT: {joinf}'
                         await channel.send(msg)
 
+async def lottery(words, trigger, message):
+    emoji_list = [':cat:', ':full_moon_with_face:', ':sun_with_face:', ':christmas_tree:', ':cherries:', ':croissant:', ':football:', ':rainbow_flag:']
+    choice1 = rnd.choice(emoji_list)
+    choice2 = rnd.choice(emoji_list)
+    choice3 = rnd.choice(emoji_list)
+    if rnd.randint(1,20) == 2:
+        choice2 = choice1
+        choice3 = choice1
+        print('AAAAAAAAAA')
+    await message.channel.send(f"""||{choice1}|| ||{choice2}|| ||{choice3}||""")
+    for slot in emoji_list:
+        if choice1 == choice2 == choice3 == slot:
+            time.sleep(5)
+            await message.channel.send("**YOU'VE WON!!!!** :sparkles: :sparkles: :exploding_head:")
+
 class botcommand:
     def __init__(self, trigger, response):
         self.trigger = trigger
@@ -106,6 +121,7 @@ command_list = [
     botcommand('d', delete),
     botcommand('hello', 'nice to see you!'),
     botcommand('announce', announce),
+    botcommand('lottery', lottery)
 ]
 
 @tasks.loop(seconds=25)
@@ -144,7 +160,7 @@ class Client(discord.Client):
         ### Accasional announcements
         if rnd.randint(1,3000) == 42:
             time.sleep(5)
-            await message.channel.send('there was a 1 in 3,000 chance that this message was sent. this is testing to make sure it works.')
+            await message.channel.send("there was a 1 in 3,000 chance that this message was sent. I like those odds.")
 
 client = Client()
 
