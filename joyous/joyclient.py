@@ -142,9 +142,9 @@ class Client(discord.Client):
                     return
 
         ### Accasional announcements
-        if rnd.randint(1,300) == 193:
-            time.sleep(27)
-            await message.channel.send('there was a 1 in 300 chance that this message was sent. this is testing to make sure it works.')
+        if rnd.randint(1,3000) == 42:
+            time.sleep(5)
+            await message.channel.send('there was a 1 in 3,000 chance that this message was sent. this is testing to make sure it works.')
 
 client = Client()
 
