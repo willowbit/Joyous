@@ -5,12 +5,13 @@ def addtofile(item, file):
     thisdir = os.path.dirname(os.path.realpath(__file__))
     fname = f'{thisdir}/../data/{file}'
     if os.path.isfile(fname) == False:
-        open(fname, 'x')
-        with open(fname, 'w') as f:
-            f.write('[]')
-    with open(fname, 'r') as f:
-        itemlist = yaml.load(f)
-    itemlist.append(item)
+        with open(fname, 'x') as f:
+            f.write(f'- {item}')
+            return
+    if os.path.isfile(fname) == True:
+        with open(fname, 'r') as f:
+            itemlist = yaml.safe_load(f)
+        itemlist.append(item)
     with open(fname, 'w+') as f:
         yaml.dump(itemlist, f)
 
@@ -33,3 +34,8 @@ def fetch_file(file):
 msg_blacklist = [
     'faggot', 'fag', 'nigger', 'nigga', 'kill yourself', 'kill urself', 'tranny', 'sweartest', 'Faggot', 'Fag', 'Nigger', 'Nigga', 'Tranny'
 ]
+
+# - cheese and crackers
+# - space
+# - yarn
+# - '"welp"'

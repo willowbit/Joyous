@@ -1,7 +1,7 @@
 botcode.txt
 joydata.json
 __pycache__
-server*.yaml
+*.server
 ledtest.py
 functesting.py
 serverquery.py

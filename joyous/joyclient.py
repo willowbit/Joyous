@@ -12,25 +12,23 @@ comand_prefix = '>'
 async def add(words, trigger, message):
     words.remove(trigger)
     x = ' '.join(words)
-    addtofile(x, f'server{message.author.guild.id}.yaml')
+    addtofile(x, f'server{message.author.guild.id}.server')
     await message.channel.send(f'{message.author.mention} "{x}" has been added to my library!')
 
 async def remove(words, trigger, message):
     words.remove(trigger)
     x = ' '.join(words)
-    print('---------------------')
-    print(x)
-    removefromfile(x, f'server{message.author.guild.id}.yaml')
+    removefromfile(x, f'server{message.author.guild.id}.server')
     if False:
         message.channel.send('The wall is empty! Add joys to it with >add')
     await message.channel.send(f'{message.author.mention} "{x}" has been removed from my library.')
 
 async def random(words, trigger, message):
-    joys = fetch_file(f'server{message.author.guild.id}.yaml')
+    joys = fetch_file(f'server{message.author.guild.id}.server')
     await message.channel.send(f"I'm grateful for...**{rnd.choice(joys)}**")
 
 async def all(words, trigger, message):
-    joys = fetch_file(f'server{message.author.guild.id}.yaml')
+    joys = fetch_file(f'server{message.author.guild.id}.server')
     nl = '\n'
     sep = ', '
     await message.channel.send(f'{message.author.mention} here are all the joys in my library......{nl}**{sep.join(joys)}**')
@@ -112,7 +110,7 @@ command_list = [
 
 @tasks.loop(seconds=25)
 async def change_status():
-    playlist = fetch_file('playlist.yaml')
+    playlist = fetch_file('playlist.server')
     await client.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=(rnd.choice(playlist))))
 
 class Client(discord.Client):
@@ -146,7 +144,7 @@ class Client(discord.Client):
         ### Accasional announcements
         if rnd.randint(1,300) == 193:
             time.sleep(27)
-            message.channel.send('there was a 1 in 300 chance that this message was sent. this is testing to make sure it works.')
+            await message.channel.send('there was a 1 in 300 chance that this message was sent. this is testing to make sure it works.')
 
 client = Client()
 
