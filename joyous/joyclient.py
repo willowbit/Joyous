@@ -186,7 +186,6 @@ command_list = [
     botcommand('amigay', amigay),
     botcommand('say', say),
     botcommand('commands', commands),
-    botcommand('hello', 'nice to see you!'),
     botcommand('lottery', lottery),
     botcommand('compliment', compliment),
     botcommand('filter', filter),
@@ -206,7 +205,6 @@ class Client(discord.Client):
         print('Logged in as')
         print(self.user.name)
         print(self.user.id)
-        print(f'at {datetime.now.strftime("%H:%M:%S")}')
         print('--------------')
         change_status.start()
     async def on_message(self, message: discord.Message):
