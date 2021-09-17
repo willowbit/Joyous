@@ -162,7 +162,7 @@ async def server(words, trigger, message):
             server = 'minecraft.shinxcraft.net'
         if a == 'B':
             server = '71.244.101.118:25566'
-            server = MinecraftServer.lookup(server)
+        server = MinecraftServer.lookup(server)
         status = server.status()
         msg = discord.Embed(description="The server has {0} players and replied in {1} ms".format(status.players.online, status.latency), color=0xff6bc9)
         await message.channel.send(embed=msg)
