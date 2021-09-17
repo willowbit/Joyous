@@ -1,4 +1,4 @@
-import schedule, time, discord, ctx, json, os, subprocess, mpv, youtube_dl, sys, requests, coverpy
+import time, discord, ctx, os, subprocess, sys, requests, coverpy, datetime
 import xkcd as xk
 import random as rnd
 from discord.ext import commands, tasks
@@ -6,15 +6,15 @@ from discord import ext
 from .grabdata import addtofile, fetch_file, msg_blacklist, removefromfile
 from .embeds import help_embed, command_embed
 from datetime import datetime as dt
+from mcstatus import MinecraftServer
+
+### command prefix
+comand_prefix = '>'
 
 cpy = coverpy.CoverPy()
-
 thisdir = os.path.dirname(os.path.realpath(__file__))
 
-### Change this for the symbol before commands
-comand_prefix = '>'
-songlist = ['rickroll.mp3', 'mrbrightside.mp3', 'almostsweetmusic.mp3']
-
+### start of command definitons
 async def add(words, trigger, message):
     words.remove(trigger)
     x = ' '.join(words)
@@ -73,21 +73,11 @@ async def say(words, trigger, message):
 async def commands(words, trigger, message):
     await message.channel.send(embed = command_embed)
 
-# async def delete(words, trigger, message):
-#     if len(words) == 1:
-#         x = 2
-#     else:
-#         x = (int(words[1]) + 1)
-#     await message.channel.purge(limit=x)
-
 async def lottery(words, trigger, message):
     emoji_list = [':cat:', ':full_moon_with_face:', ':sun_with_face:', ':christmas_tree:', ':cherries:', ':croissant:', ':football:', ':rainbow_flag:']
     choice1 = rnd.choice(emoji_list)
     choice2 = rnd.choice(emoji_list)
     choice3 = rnd.choice(emoji_list)
-    # if rnd.randint(1,3) == 2:
-    #     choice2 = choice1
-    #     choice3 = choice1
     await message.channel.send(f"""||{choice1} {choice2} {choice3}||""")
     for slot in emoji_list:
         if choice1 == choice2 == choice3 == slot:
@@ -145,14 +135,11 @@ async def albumart(words, trigger, message):
     songname = ' '.join(words[1:])
     result = cpy.get_cover(songname, limit)
     art = result.artwork(10000)
-    
     description = f'{message.author.mention}, {result.artist} - {result.name}'
     print(description)
-    
     embed = discord.Embed(description=description, color=0xff6bc9)
     embed.set_image(url=art)
     embed.set_footer(text='try >xkcd random!')
-
     await message.channel.send(embed=embed)
 
 async def tea(words, trigger, message):
@@ -160,6 +147,16 @@ async def tea(words, trigger, message):
         await message.channel.send(f"here, {words[1]}, have a nice cozy cup of hot tea :heart: :coffee:")
     else:
         await message.channel.send(f"here, {message.author.mention}, have a nice cozy cup of hot tea :heart: :coffee:")
+
+async def exist(words, trigger, message):
+    await message.author.voice.channel.connect()
+
+async def server(words, trigger, message):
+    server = MinecraftServer.lookup("minecraft.shinxcraft.net")
+    
+    status = server.status()
+    msg = discord.Embed(description="The server has {0} players and replied in {1} ms".format(status.players.online, status.latency), color=0xff6bc9)
+    await message.channel.send(embed=msg)
 
 class botcommand:
     def __init__(self, trigger, response):
@@ -174,8 +171,7 @@ class botcommand:
                 return True
         else:
             return False
-
-
+### ('word that initiates command', thing to execute)
 command_list = [
     botcommand('add', add),
     botcommand('remove', remove),
@@ -192,6 +188,8 @@ command_list = [
     botcommand('poll', poll),
     botcommand('xkcd', xkcd),
     botcommand('albumart', albumart),
+    botcommand('exist', exist),
+    botcommand('server', server)
 ]
 
 ### Changes the status every 50 seconds
@@ -200,15 +198,16 @@ async def change_status():
     statuslist = fetch_file('statuslist.yaml')
     await client.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=(rnd.choice(statuslist))))
 
+### the bot client
 class Client(discord.Client):
     async def on_ready(self):
         print('Logged in as')
-        print(self.user.name)
-        print(self.user.id)
+        print(f'{self.user.name}')
+        print(f'bot id: {self.user.id}')
+        print(f'at {datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
         print('--------------')
         change_status.start()
     async def on_message(self, message: discord.Message):
-
         content = message.content
         ### Make sure the bot doesn't reply to itself
         if message.author.id == self.user.id:
