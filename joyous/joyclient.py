@@ -156,12 +156,12 @@ async def exist(words, trigger, message):
 async def server(words, trigger, message):
     if len(words) == 2:
         a = words[1]
-        if type(a) == int:
-            server = a
         if a == 'A':
             server = 'minecraft.shinxcraft.net'
         if a == 'B':
             server = '71.244.101.118:25566'
+        else:
+            server = a
         server = MinecraftServer.lookup(server)
         status = server.status()
         msg = discord.Embed(description="The server has {0} players and replied in {1} ms".format(status.players.online, status.latency), color=0xff6bc9)
