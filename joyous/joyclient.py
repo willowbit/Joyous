@@ -14,7 +14,9 @@ comand_prefix = '>'
 cpy = coverpy.CoverPy()
 thisdir = os.path.dirname(os.path.realpath(__file__))
 
-### start of command definitons
+### Change this for the symbol before commands
+comand_prefix = '>'
+
 async def add(words, trigger, message):
     words.remove(trigger)
     x = ' '.join(words)
@@ -82,7 +84,7 @@ async def lottery(words, trigger, message):
     for slot in emoji_list:
         if choice1 == choice2 == choice3 == slot:
             time.sleep(5)
-            await message.channel.send(f"** {message.author.mention} YOU'VE WON!!!!** :sparkles: :sparkles: :exploding_head:")
+            await message.channel.send(f"** :sparkles: {message.author.mention} Has won the lottery!** :sparkles: :sparkles:")
 
 async def compliment(words, trigger, message):
     x = ' '.join(words[1:])
@@ -152,11 +154,25 @@ async def exist(words, trigger, message):
     await message.author.voice.channel.connect()
 
 async def server(words, trigger, message):
-    server = MinecraftServer.lookup("minecraft.shinxcraft.net")
-    
-    status = server.status()
-    msg = discord.Embed(description="The server has {0} players and replied in {1} ms".format(status.players.online, status.latency), color=0xff6bc9)
-    await message.channel.send(embed=msg)
+    if len(words) == 2:
+        a = words[1]
+        if type(a) == int:
+            server = a
+        if a == 'A':
+            server = 'minecraft.shinxcraft.net'
+        if a == 'B':
+            server = '71.244.101.118:25566'
+            server = MinecraftServer.lookup(server)
+        status = server.status()
+        msg = discord.Embed(description="The server has {0} players and replied in {1} ms".format(status.players.online, status.latency), color=0xff6bc9)
+        await message.channel.send(embed=msg)
+    else:
+        A = MinecraftServer.lookup('minecraft.shinxcraft.net')
+        B = MinecraftServer.lookup('71.244.101.118:25566')
+        statusA = A.status()
+        statusB = B.status()
+        msg = discord.Embed(description="The Capitalist server has {0} players and replied in {1} ms, and the Anti-Capitalism server has {2} players and replied in {3} ms".format(statusA.players.online, statusA.latency, statusB.players.online, statusB.latency), color=0xff6bc9)
+        await message.channel.send(embed=msg)
 
 class botcommand:
     def __init__(self, trigger, response):
