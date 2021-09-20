@@ -157,9 +157,9 @@ async def server(words, trigger, message):
     if len(words) == 2:
         a = words[1]
         if a == 'A':
-            server = 'minecraft.shinxcraft.net'
+            server = '71.244.101.118:25565'
         if a == 'B':
-            server = '71.244.101.118:25566'
+            server = '71.244.101.118:7777'
         else:
             server = a
         server = MinecraftServer.lookup(server)
@@ -167,11 +167,17 @@ async def server(words, trigger, message):
         msg = discord.Embed(description="The server has {0} players and replied in {1} ms".format(status.players.online, status.latency), color=0xff6bc9)
         await message.channel.send(embed=msg)
     else:
-        A = MinecraftServer.lookup('minecraft.shinxcraft.net')
-        B = MinecraftServer.lookup('71.244.101.118:25566')
+        A = MinecraftServer.lookup('71.244.101.118:25565')
+        B = MinecraftServer.lookup('71.244.101.118:7777')
         statusA = A.status()
         statusB = B.status()
-        msg = discord.Embed(description="The Capitalist server has {0} players and replied in {1} ms, and the Anti-Capitalism server has {2} players and replied in {3} ms".format(statusA.players.online, statusA.latency, statusB.players.online, statusB.latency), color=0xff6bc9)
+        msg = discord.Embed(description="""
+**thatSMPofHer's**
+players: {0}
+{1} ms
+**Capitalist Server**
+players: {2}
+{3} ms""".format(statusA.players.online, statusA.latency, statusB.players.online, statusB.latency), color=0xff6bc9)
         await message.channel.send(embed=msg)
 
 class botcommand:
