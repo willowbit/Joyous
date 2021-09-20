@@ -154,31 +154,18 @@ async def exist(words, trigger, message):
     await message.author.voice.channel.connect()
 
 async def server(words, trigger, message):
-    if len(words) == 2:
-        a = words[1]
-        if a == 'A':
-            server = '71.244.101.118:25565'
-        if a == 'B':
-            server = '71.244.101.118:7777'
-        else:
-            server = a
-        server = MinecraftServer.lookup(server)
-        status = server.status()
-        msg = discord.Embed(description="The server has {0} players and replied in {1} ms".format(status.players.online, status.latency), color=0xff6bc9)
-        await message.channel.send(embed=msg)
-    else:
-        A = MinecraftServer.lookup('71.244.101.118:25565')
-        B = MinecraftServer.lookup('71.244.101.118:7777')
-        statusA = A.status()
-        statusB = B.status()
-        msg = discord.Embed(description="""
+    A = MinecraftServer.lookup('71.244.101.118:25565')
+    B = MinecraftServer.lookup('71.244.101.118:7777')
+    statusA = A.status()
+    statusB = B.status()
+    msg = discord.Embed(description="""
 **thatSMPofHer's**
 players: {0}
 {1} ms
 **Capitalist Server**
 players: {2}
 {3} ms""".format(statusA.players.online, statusA.latency, statusB.players.online, statusB.latency), color=0xff6bc9)
-        await message.channel.send(embed=msg)
+    await message.channel.send(embed=msg)
 
 class botcommand:
     def __init__(self, trigger, response):
