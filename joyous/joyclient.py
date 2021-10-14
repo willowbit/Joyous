@@ -155,17 +155,25 @@ async def exist(words, trigger, message):
 
 async def server(words, trigger, message):
     A = MinecraftServer.lookup('71.244.101.118:25565')
-    B = MinecraftServer.lookup('71.244.101.118:7777')
+    B = MinecraftServer.lookup('71.244.101.118:25566')
     statusA = A.status()
     statusB = B.status()
     msg = discord.Embed(description="""
 **thatSMPofHer's**
 players: {0}
 {1} ms
-**Capitalist Server**
+**Modded Server**
 players: {2}
 {3} ms""".format(statusA.players.online, statusA.latency, statusB.players.online, statusB.latency), color=0xff6bc9)
     await message.channel.send(embed=msg)
+
+async def tea(words, trigger, message):
+    with open('../data/tea.txt') as f
+    teas = f.read()
+    if len(words) == 2:
+        await message.channel.send(f'**Here, {words[1]}, have a cup of hot, steamy tea :tea: (({0} cups of tea have been given))**'.format(teas))
+    else:
+        await message.channel.send(f'**Here, {message.author.mention}, have a cup of hot, steamy tea :tea: (({0} cups of tea have been given))**'.format(teas))
 
 class botcommand:
     def __init__(self, trigger, response):
@@ -198,7 +206,8 @@ command_list = [
     botcommand('xkcd', xkcd),
     botcommand('albumart', albumart),
     botcommand('exist', exist),
-    botcommand('server', server)
+    botcommand('server', server),
+    botcommand('tea', tea),
 ]
 
 ### Changes the status every 50 seconds
