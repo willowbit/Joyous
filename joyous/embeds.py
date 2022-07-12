@@ -8,6 +8,7 @@ command_embed = discord.Embed(title='Commands', description="""
 **>remove [x]** - allows you to remove [x] from the joy wall
 **>wall** - displays the joy wall
 **>random** - displays a random joy from the joy wall
+**>joke** - heheheha lol
 
 **>tea** - just tea.
 **>amigay [x]** - discerns if you, or x if provided, are gay
@@ -16,7 +17,7 @@ command_embed = discord.Embed(title='Commands', description="""
 **>compliment** - request a compliment! I love making people happy :)
 **>xkcd [random, latest]** - displays a random (>xkcd random) or the latest (>xkcd latest) xkcd comic! check out all of Randall Munroe's work at https://xkcd.com/
 **>albumart [keywords]** - find any album art! credit to https://github.com/matteing for the API
-**>server [ip]** - check the # of players/ping of a minecraft server; blank will give the status of the Her's SMP
+**>server [ip]** - check the # of players/ping of a minecraft server
 
 """, color=0xff6bc9)
 

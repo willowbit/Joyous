@@ -39,7 +39,8 @@ async def remove(words, trigger, message):
 
 async def random(words, trigger, message):
     joys = fetch_file(f'server{message.author.guild.id}.server')
-    await message.channel.send(f"I'm grateful for...**{rnd.choice(joys)}**")
+    quip = ['love me some good **{0}**!!}', "I'm greatful for....**{0}**", "last night, **{0}** knocked on my door and asked if I had any pancake mix.", "sussy imposter **{0}**", "making out with **{0}**", "happily married to **{0}** for four long years!!", "nothing yells redneck more than **{0}**"]
+    await message.channel.send(rnd.choice(quip).format(rnd.choice(joys)))
 
 async def wall(words, trigger, message):
     joys = fetch_file(f'server{message.author.guild.id}.server')
@@ -63,6 +64,19 @@ async def amigay(words, trigger, message):
         await message.channel.send('calculating gayness......')
         time.sleep(2.6)
         await message.channel.send(f'{message.author.mention} I can confirm that {x} **{rnd.choice(gayornotgay)}** gay')
+
+async def amired(words, trigger, message):
+    x = ' '.join(words[1:])
+    if len(words) == 1:
+        gayornotgay = ['not', 'in fact']
+        await message.channel.send('calculating political compass......')
+        time.sleep(2.6)
+        await message.channel.send(f'{message.author.mention} I can confirm you are **{rnd.choice(gayornotgay)}** communist')
+    else:
+        gayornotgay = ['is not', 'is in fact']
+        await message.channel.send('calculating political compass......')
+        time.sleep(2.6)
+        await message.channel.send(f'{message.author.mention} I can confirm that {x} **{rnd.choice(gayornotgay)}** communist')
 
 async def say(words, trigger, message):
     await message.channel.purge(limit=1)
@@ -123,10 +137,11 @@ React with a :thumbsup: for yes and a :thumbsdown: for no.""")
     time.sleep(2)
 
 async def xkcd(words, trigger, message):
-    if words[1] in ['-r', 'r', 'random']:
-        comic = xk.getRandomComic()
-    elif words[1] in ['-l', 'l', 'latest', 'new', '-n']:
-        comic = xk.getLatestComic()
+    if len(words) > 1:
+        if words[1] in ['-r', 'r', 'random']:
+            comic = xk.getRandomComic()
+        elif words[1] in ['-l', 'l', 'latest', 'new', '-n']:
+            comic = xk.getLatestComic()
     else:
         comic = xk.getLatestComic()
     comic = comic.getImageLink()
@@ -143,12 +158,6 @@ async def albumart(words, trigger, message):
     embed.set_image(url=art)
     embed.set_footer(text='try >xkcd random!')
     await message.channel.send(embed=embed)
-
-async def tea(words, trigger, message):
-    if len(words) == 2:
-        await message.channel.send(f"here, {words[1]}, have a nice cozy cup of hot tea :heart: :coffee:")
-    else:
-        await message.channel.send(f"here, {message.author.mention}, have a nice cozy cup of hot tea :heart: :coffee:")
 
 async def exist(words, trigger, message):
     await message.author.voice.channel.connect()
@@ -168,12 +177,24 @@ players: {2}
     await message.channel.send(embed=msg)
 
 async def tea(words, trigger, message):
-    with open('../data/tea.txt') as f
-    teas = f.read()
+    with open('/home/willa/Joyous/data/tea.txt') as f:
+        teas = f.read()
     if len(words) == 2:
-        await message.channel.send(f'**Here, {words[1]}, have a cup of hot, steamy tea :tea: (({0} cups of tea have been given))**'.format(teas))
+        await message.channel.send(f"**Here, {words[1]}, have a cup of hot, steamy tea :tea: (({teas} cups of tea have been given))**")
     else:
-        await message.channel.send(f'**Here, {message.author.mention}, have a cup of hot, steamy tea :tea: (({0} cups of tea have been given))**'.format(teas))
+        await message.channel.send(f'**Here, {message.author.mention}, have a cup of hot, steamy tea :tea: (({teas} cups of tea have been given))**'.format(teas))
+    with open('/home/willa/Joyous/data/tea.txt','w') as f:
+        teas = int(teas) + 1
+        teas = str(teas)
+        f.write(teas)
+
+async def joke(words, trigger, message):
+    jokes = [f'Why did {message.author.mention} cross the road?']
+    joke = rnd.choice(jokes)
+    joys = fetch_file(f'server{message.author.guild.id}.server')
+    await message.channel.send(joke)
+    time.sleep(2)
+    await message.channel.send(f'To get to the {rnd.choice(joys)}')
 
 class botcommand:
     def __init__(self, trigger, response):
@@ -188,6 +209,8 @@ class botcommand:
                 return True
         else:
             return False
+
+
 ### ('word that initiates command', thing to execute)
 command_list = [
     botcommand('add', add),
@@ -208,6 +231,8 @@ command_list = [
     botcommand('exist', exist),
     botcommand('server', server),
     botcommand('tea', tea),
+    botcommand('joke', joke),
+    botcommand('amired', amired),
 ]
 
 ### Changes the status every 50 seconds
